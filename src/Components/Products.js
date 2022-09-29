@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Divider, Header } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 import ProductsTable from './ProductsTable'
 import ProductsCreate from './ProductsCreate'
 
@@ -11,7 +11,6 @@ export default function Reports() {
       <ProductContextProvider>
         <Header>Manage Products</Header>
         <ProductsCreate/>
-        <Divider/>
         <ProductsTable/>
       </ProductContextProvider>
     </Fragment>

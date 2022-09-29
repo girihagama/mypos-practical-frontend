@@ -14,8 +14,8 @@ export default function ReportsGenerator() {
       <Segment inverted>
             <Form inverted>
             <Form.Group widths='equal'>
-                <Form.Input type='date' value={fromDate} required fluid label='Generate From' onChange={(e)=>setFromDate(e.target.value)} placeholder='From Date' />
-                <Form.Input type='date' value={toDate} required fluid label='Generate To' onChange={(e)=>setToDate(e.target.value)} placeholder='To Date' />    
+                <Form.Input type='date' value={fromDate} required fluid label='Generate From' onChange={(e)=>{setFromDate(e.target.value);}} placeholder='From Date' />
+                <Form.Input type='date' value={toDate} required fluid label='Generate To' onChange={(e)=>{setToDate(e.target.value);}} placeholder='To Date' />    
                 <Button type='submit' onClick={()=>generateReport(token)} compact size='small'>Generate</Button>            
                 <Button type='submit' onClick={()=>clearReport()} compact size='small'>Clear</Button>            
             </Form.Group>          

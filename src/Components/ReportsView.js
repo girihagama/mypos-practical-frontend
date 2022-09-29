@@ -5,7 +5,7 @@ import { Button, Divider, Grid, GridColumn, Table } from 'semantic-ui-react';
 import ReportsViewPrint from './ReportsViewPrint';
 
 export default function ReportsView() {
-    let componentRef = useRef();
+  const componentRef = React.useRef(null);
 
   return (
     <div>

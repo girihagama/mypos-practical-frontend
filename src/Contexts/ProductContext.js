@@ -6,6 +6,7 @@ import endpoints from "../endpoints";
 export const ProductContext = createContext();
 
 function ProductContextProvider (props){
+    const [initLoad, setInitLoad] = useState(false);
     const [id, setId] = useState();
     const [name, setName] = useState();
     const [price, setPrice] = useState();
@@ -23,6 +24,7 @@ function ProductContextProvider (props){
         }).then((value)=>{
             if(value.status == 200 && value.data){
                 setProductList(value.data);
+                setInitLoad(true);
             }
         });
     }
@@ -139,7 +141,7 @@ function ProductContextProvider (props){
         return n % 1 === 0;
      }
 
-    const value = {id, setId, name, setName, price, setPrice, qty, setQty, productList, setProductList, loadProducts, addProduct, changeName, changePrice,changeQty}
+    const value = {id, setId, name, setName, price, setPrice, qty, setQty, productList, setProductList, loadProducts, addProduct, changeName, changePrice,changeQty,initLoad, setInitLoad}
     return(
         <ProductContext.Provider value={value}>
             {props.children}

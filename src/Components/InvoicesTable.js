@@ -1,46 +1,45 @@
-import React from 'react'
-import { Table } from 'semantic-ui-react'
+import React, {useContext, useEffect} from 'react'
+import { Table, Divider } from 'semantic-ui-react'
+
+import {InvoiceContext} from '../Contexts/InvoiceContext';
+import {AuthContext} from '../Contexts/AuthContext';
 
 export default function InvoicesTable() {
+    const {loadInvoices, invList, invListInitLoad} = useContext(InvoiceContext);
+    const {token} = useContext(AuthContext);
+
+    useEffect(() => {
+        if (!invListInitLoad) loadInvoices(token);
+    });
+
   return (
     <div>
-      <Table celled compact columns={'16'}>
-            <Table.Header fullWidth>
-            <Table.Row>
-                <Table.HeaderCell>Invoice #</Table.HeaderCell>
-                <Table.HeaderCell>Invoice Date</Table.HeaderCell>
-                <Table.HeaderCell>Invoice Value</Table.HeaderCell>
-                <Table.HeaderCell>Customer Name</Table.HeaderCell>
-            </Table.Row>
-            </Table.Header>
+      <Divider horizontal>Created Invoices</Divider>
+      <Table celled compact>
+                <Table.Header fullWidth>
+                <Table.Row>
+                    <Table.HeaderCell>Invoice #</Table.HeaderCell>
+                    <Table.HeaderCell>Invoice Date</Table.HeaderCell>
+                    <Table.HeaderCell>Customer Name</Table.HeaderCell>
+                    <Table.HeaderCell>Invoice Value</Table.HeaderCell>
+                </Table.Row>
+                </Table.Header>
 
-            <Table.Body>
-            <Table.Row>
-                <Table.Cell>John</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-                <Table.Cell>Jamie</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-                <Table.Cell>Jill</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-                <Table.Cell>Jill</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-            </Table.Row>
-            </Table.Body>
-        </Table>
+                <Table.Body>
+                {(invList).map((value,index)=>{                  
+                    return(
+                    <Table.Row key={index}>
+                        <Table.Cell>{value.Invoice_Hed_id}</Table.Cell>
+                        <Table.Cell>{value.Invoice_Hed_Date}</Table.Cell>
+                        <Table.Cell>{value.Invoice_Hed_customer}</Table.Cell>
+                        <Table.Cell textAlign='right'>{value.Invoice_Hed_Amount}</Table.Cell>
+                    </Table.Row>
+                    )
+                })
+
+                }
+                </Table.Body>
+            </Table>
     </div>
   )
 }

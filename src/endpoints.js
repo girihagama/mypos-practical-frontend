@@ -5,4 +5,5 @@ export default {
     addProduct : "http://localhost:8081/api/product/create",
     updateProduct : "http://localhost:8081/api/product/update",
     generateReport: "http://localhost:8081/api/report/generate",
+    getInvoices: "http://localhost:8081/api/invoiceHed/read",
 }

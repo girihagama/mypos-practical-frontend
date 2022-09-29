@@ -1,19 +1,20 @@
 import React, {useContext, useEffect} from 'react'
-import { Table, Button } from 'semantic-ui-react'
+import { Table, Button, Divider } from 'semantic-ui-react'
 
 import {ProductContext} from '../Contexts/ProductContext';
 import {AuthContext} from '../Contexts/AuthContext';
 
 export default function ProductsTable() {
-   const {productList, loadProducts, changeName, changePrice, changeQty} = useContext(ProductContext);
+   const {productList, loadProducts, changeName, changePrice, changeQty, initLoad, setInitLoad} = useContext(ProductContext);
    const {token} = useContext(AuthContext);
 
    useEffect(() => {
-        loadProducts(token);
+        if(!initLoad) loadProducts(token);
     });
 
   return (
     <div>
+      <Divider horizontal>Product List</Divider>
       <Table celled compact columns={'16'}>
             <Table.Header fullWidth>
             <Table.Row>
