@@ -1,7 +1,17 @@
-import React from 'react'
-import { Table } from 'semantic-ui-react'
+import React, {useContext, useEffect} from 'react'
+import { Table, Button } from 'semantic-ui-react'
+
+import {ProductContext} from '../Contexts/ProductContext';
+import {AuthContext} from '../Contexts/AuthContext';
 
 export default function ProductsTable() {
+   const {productList, loadProducts, changeName, changePrice, changeQty} = useContext(ProductContext);
+   const {token} = useContext(AuthContext);
+
+   useEffect(() => {
+        loadProducts(token);
+    });
+
   return (
     <div>
       <Table celled compact columns={'16'}>
@@ -15,34 +25,24 @@ export default function ProductsTable() {
             </Table.Header>
 
             <Table.Body>
-            <Table.Row>
-                <Table.Cell>John</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell textAlign='right'>Options</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-                <Table.Cell>Jamie</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell textAlign='right'>Options</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-                <Table.Cell>Jill</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell textAlign='right'>Options</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-                <Table.Cell>Jill</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell textAlign='right'>Options</Table.Cell>
-            </Table.Row>
+                { (productList).map((data) => {
+                        return(
+                            <Table.Row key={data.Products_id}>
+                                <Table.Cell>{data.Products_id}</Table.Cell>
+                                <Table.Cell>{data.Products_Name}</Table.Cell>
+                                <Table.Cell>{data.Products_price}</Table.Cell>
+                                <Table.Cell>{data.Products_qty}</Table.Cell>
+                                <Table.Cell textAlign='right'>
+                                    <Button.Group size='small'>
+                                        <Button onClick={()=>changeName(token, data)}>Change Name</Button>
+                                        <Button onClick={()=>changePrice(token, data)}>Update Price</Button>
+                                        <Button onClick={()=>changeQty(token, data)}>Update Qty</Button>
+                                    </Button.Group>
+                                </Table.Cell>
+                            </Table.Row>
+                        )
+                    })
+                }
             </Table.Body>
         </Table>
     </div>
