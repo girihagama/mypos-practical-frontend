@@ -6,8 +6,12 @@ import {InvoiceContext} from '../Contexts/InvoiceContext';
 import {AuthContext} from '../Contexts/AuthContext';
 
 export default function InvoicesCreate() {
-    const {loadProducts, productList, updatedProducts, productInitLoad, invProducts, addToInvoice, removeFromInvoice} = useContext(InvoiceContext);
+    const {loadProducts, productList, updatedProducts, productInitLoad, invProducts, addToInvoice, removeFromInvoice, hedAmount, setHedAmount, setInvProducts, createInvoice} = useContext(InvoiceContext);
     const {token} = useContext(AuthContext);
+
+    const [invId, setInvId] = useState('');
+    const [cusName, setCusName] = useState('');
+    const [createNew, setCreateNew] = useState(false);
 
     const [productSelection, setProductSelection] = useState('');
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -50,10 +54,38 @@ export default function InvoicesCreate() {
         //Reset
         setProductSelection(null);
         setQty(1);
+        //console.log("Grand Total", hedAmount);
     }
 
     var handleRemoveFromInvoice = (index) => {
         removeFromInvoice(index);
+        console.log("Grand Total", hedAmount);
+    }
+
+    function submitNew(){
+        var head = {};
+        var detail = [];
+
+        detail = invProducts;
+
+        head.Invoice_Hed_id = invId;
+        head.Invoice_Hed_Amount = hedAmount;
+        head.Invoice_Hed_customer = cusName;
+
+        createInvoice(head, detail, token);
+        resetNewInvoice();        
+    }
+
+    function resetNewInvoice(){
+        setInvId('');
+        setCusName('');
+        setCreateNew(false);
+
+        setInvProducts([]);
+
+        setProductSelection('');
+        setSelectedProduct(null);
+        setQty(1);
     }
 
   return (
@@ -62,14 +94,18 @@ export default function InvoicesCreate() {
         <Grid.Column width={16}>
             <Segment>
                 <Grid>
-                    <Grid.Column width={8}>
-                        <Input min={0} type='number' required fluid label='Invoice #' placeholder='Add product id' />
+                    <Grid.Column width={7}>
+                        <Input disabled={(createNew)} min={1} type='number' value={invId} onChange={(e)=>{setInvId(e.target.value)}} required fluid label='Invoice #' placeholder='Add product id' />
                     </Grid.Column>
-                    <Grid.Column width={8}>
-                    <Input type='text' required fluid label='Customer Name' placeholder='Add product name' /> 
+                    <Grid.Column width={7}>
+                        <Input disabled={(createNew)} type='text' value={cusName} onChange={(e)=>{setCusName(e.target.value)}}  required fluid label='Customer Name' placeholder='Add product name' /> 
+                    </Grid.Column>
+                    <Grid.Column width={2} >
+                        <Button disabled={(!invId || !cusName)} onClick={()=>setCreateNew(true)}>Create</Button>
                     </Grid.Column>
                 </Grid>
             </Segment>
+            {(createNew)?
             <Segment>
                 <Grid>
                     <Grid.Column width={2}>
@@ -127,7 +163,7 @@ export default function InvoicesCreate() {
                             <Table.Cell>{value.Products_price}</Table.Cell>
                             <Table.Cell>{value.qty}</Table.Cell>
                             <Table.Cell>{value.amount}</Table.Cell>
-                            <Table.Cell textAlign='right'><Button onClick={()=>handleRemoveFromInvoice(index)}>Remove</Button></Table.Cell>
+                            <Table.Cell textAlign='right'><Button color='red' fluid onClick={()=>handleRemoveFromInvoice(index)}>Remove</Button></Table.Cell>
                         </Table.Row>
                         )
                     })
@@ -138,18 +174,20 @@ export default function InvoicesCreate() {
                     <Table.Footer fullWidth>
                     <Table.Row>
                         <Table.HeaderCell colSpan='10' textAlign='left'>
-                            <h3>Total : 0.00</h3>
+                            <h3>Total : {hedAmount}</h3>
                         </Table.HeaderCell>
                     </Table.Row>
                     </Table.Footer>
                 </Table>
 
                 <Button.Group fluid>
-                    <Button>Cancel</Button>
+                    <Button onClick={()=>{resetNewInvoice()}}>Cancel</Button>
                     <Button.Or />
-                    <Button color='green' disabled={(invProducts && invProducts.legth > 0)}>Create</Button>
+                    <Button color='green' onClick={()=>submitNew()} disabled={(invProducts && invProducts.legth > 0)}>Create</Button>
                 </Button.Group>
             </Segment>
+            : ""}
+
         </Grid.Column>
     </Grid>
     </div>

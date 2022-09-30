@@ -7,7 +7,7 @@ import endpoints from "../endpoints";
 export const InvoiceContext = createContext();
 
 function InvoiceContextProvider (props){
-    const [hedAmount, setHedAmount] = useState();
+    const [hedAmount, setHedAmount] = useState(0);
     const [invProducts, setInvProducts] = useState([]);
     const [productInitLoad, setProductInitLoad] = useState(false);
     const [productList, setProductList] = useState([]);
@@ -53,6 +53,13 @@ function InvoiceContextProvider (props){
         currentArray.push(data);
         console.log(currentArray);
         setInvProducts(currentArray);
+
+        var grandTotal = 0;
+        currentArray.forEach(element => {
+            grandTotal += element.amount;
+        });
+        //console.log('GT', grandTotal);
+        setHedAmount(grandTotal);
     }
 
     function removeFromInvoice(index){
@@ -67,6 +74,21 @@ function InvoiceContextProvider (props){
         currentArray = newArray;
         console.log("NEW",currentArray);
         setInvProducts(currentArray);
+
+        var grandTotal = 0;
+        currentArray.forEach(element => {
+            grandTotal += element.amount;
+        });
+        //console.log('GT', grandTotal);
+        setHedAmount(grandTotal);
+    }
+
+    function createInvoice(head, detail, token){
+        //console.log(head,detail,token);
+
+        
+
+        loadInvoices(token);
     }
 
     function mapProducts(jsonArray){
@@ -91,7 +113,7 @@ function InvoiceContextProvider (props){
         return n % 1 === 0;
     }
 
-    const value = {removeFromInvoice, invProducts, loadInvoices, loadProducts, invList, updatedProducts,productInitLoad, setProductInitLoad,invListInitLoad, setInvListInitLoad, productList, addToInvoice}
+    const value = {hedAmount, createInvoice, setHedAmount, removeFromInvoice, invProducts,setInvProducts, loadInvoices, loadProducts, invList, updatedProducts, productInitLoad, setProductInitLoad,invListInitLoad, setInvListInitLoad, productList, addToInvoice}
     return(
         <InvoiceContext.Provider value={value}>
             {props.children}
