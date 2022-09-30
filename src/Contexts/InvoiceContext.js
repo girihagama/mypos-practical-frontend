@@ -84,11 +84,50 @@ function InvoiceContextProvider (props){
     }
 
     function createInvoice(head, detail, token){
-        //console.log(head,detail,token);
+        console.log(head,detail,token);
 
-        
+        axios({
+            method: 'post',
+            url: endpoints.createInvoiceHed,
+            data: qs.stringify({
+                Invoice_Hed_id : head.Invoice_Hed_id,
+                Invoice_Hed_Amount : head.Invoice_Hed_Amount,
+                Invoice_Hed_customer : head.Invoice_Hed_customer,
+            }),
+            headers : {
+                'Authorization': `${token}`
+            },
+            responseType: 'json',
+        }).then((value)=>{
+            //console.log(value);
+            if(value.data && value.data.action == 1){
+                loadInvoices(token);
 
-        loadInvoices(token);
+                //add invoice detail
+                detail.map((invDetail)=>{
+                    axios({
+                        method: 'post',
+                        url: endpoints.createInvoiceDetail,
+                        data: qs.stringify({
+                            Products_Products_id : invDetail.Products_id,
+                            Invoice_Hed_Invoice_Hed_id : head.Invoice_Hed_id,
+                            Invoice_Details_Amount : invDetail.amount,
+                            Invoice_Details_qty : invDetail.qty,
+                        }),
+                        headers : {
+                            'Authorization': `${token}`
+                        },
+                        responseType: 'json',
+                    }).then((value)=>{
+                        console.log(value.data);
+                    });
+                })
+            }else{
+                alert("Invoice ID already exist!");
+                return;
+            }           
+        });
+
     }
 
     function mapProducts(jsonArray){

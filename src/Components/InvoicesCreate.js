@@ -86,6 +86,7 @@ export default function InvoicesCreate() {
         setProductSelection('');
         setSelectedProduct(null);
         setQty(1);
+        setHedAmount(0);
     }
 
   return (
